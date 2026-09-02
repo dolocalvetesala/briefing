@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Briefing de vuestra web · webparabodas.es</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Jost:wght@300;400;500&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --crema:#F8F6EF;
+  --crema-2:#F1EFE6;
+  --blanco:#FDFCF8;
+  --tinta:#33301F;
+  --tinta-70:#55523C;
+  --tinta-55:#66634A;
+  --tinta-45:#7E7B58;
+  --oliva:#6F6C43;
+  --oliva-osc:#5C5A38;
+  --camomila:#D2BF81;
+  --menta:#ACB090;
+  --aviso:#8A6A32;
+  --linea:rgba(51,48,31,.16);
+  --linea-suave:rgba(51,48,31,.1);
+  --serif:'Instrument Serif',Georgia,serif;
+  --sans:'Jost',system-ui,-apple-system,sans-serif;
+  --mano:'Caveat',cursive;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  margin:0;background:var(--crema);color:var(--tinta);
+  font-family:var(--sans);font-weight:300;font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3{font-family:var(--serif);font-weight:400;margin:0;letter-spacing:-.01em;text-wrap:pretty}
+p{margin:0;text-wrap:pretty}
+svg{display:block}
+button{font:inherit;color:inherit;cursor:pointer}
+ul,ol{margin:0;padding:0;list-style:none}
+[hidden]{display:none !important}
+
+body::after{
+  content:"";position:fixed;inset:0;z-index:200;pointer-events:none;
+  opacity:.09;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:12px;top:12px;z-index:300;background:var(--tinta);color:var(--crema);padding:12px 16px;border-radius:8px}
+
+/* ---------- cabecera móvil ---------- */
+.barra{
+  position:sticky;top:0;z-index:60;
+  background:color-mix(in srgb,var(--crema) 94%,transparent);
+  backdrop-filter:blur(12px);border-bottom:1px solid rgba(51,48,31,.08);
+}
+.barra__fila{display:flex;align-items:center;justify-content:space-between;gap:14px;min-height:60px;padding:0 20px}
+.logo{font-family:var(--mano);font-size:25px;line-height:1;color:var(--oliva)}
+.barra__paso{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--tinta-45);text-align:right}
+.progreso{height:3px;background:rgba(51,48,31,.1)}
+.progreso__valor{height:100%;width:0;background:var(--oliva);transition:width .4s cubic-bezier(.2,.7,.2,1)}
+
+/* ---------- layout ---------- */
+.marco{max-width:1240px;margin:0 auto;padding:28px 20px 64px}
+.lateral{display:none}
+.panel{min-width:0}
+
+/* ---------- pasos ---------- */
+.paso{display:none}
+.paso.activo{display:block;animation:entra .45s cubic-bezier(.2,.7,.2,1) both}
+@keyframes entra{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.paso__eyebrow{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--oliva)}
+.paso h2{font-size:clamp(2rem,8vw,2.35rem);line-height:1.04;margin-top:12px}
+.paso__intro{font-size:15.5px;color:var(--tinta-70);margin-top:14px;max-width:56ch}
+.bloques{display:flex;flex-direction:column;gap:26px;margin-top:30px}
+.bloque{background:var(--blanco);border:1px solid var(--linea-suave);border-radius:18px;padding:22px 20px}
+.bloque>h3{font-size:24px;margin-bottom:4px}
+.bloque__ayuda{font-size:13.5px;color:var(--tinta-55);margin-bottom:18px;max-width:56ch}
+.bloque__ayuda:last-child{margin-bottom:0}
+.rejilla{display:grid;gap:16px}
+.subtitulo{
+  font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--tinta-45);padding-bottom:10px;border-bottom:1px solid var(--linea-suave);
+  margin:6px 0 4px;
+}
+
+/* ---------- campos ---------- */
+.campo>label,.campo__titulo{display:block;font-size:13px;color:var(--tinta-55);margin-bottom:7px}
+.campo__titulo{font-size:15px;color:var(--tinta);margin-bottom:10px}
+.pista{font-size:12.5px;color:var(--tinta-45);margin-top:-2px;margin-bottom:10px;max-width:56ch}
+.campo input[type=text],.campo input[type=email],.campo input[type=tel],
+.campo input[type=date],.campo input[type=time],.campo input[type=url],
+.campo select,.campo textarea{
+  width:100%;min-height:50px;padding:14px;
+  font:inherit;font-size:15.5px;color:var(--tinta);
+  background:var(--crema);border:1px solid rgba(51,48,31,.16);border-radius:10px;
+}
+.campo textarea{min-height:104px;resize:vertical;line-height:1.55}
+.campo input:focus-visible,.campo select:focus-visible,.campo textarea:focus-visible{outline:2px solid var(--oliva);outline-offset:1px}
+.campo[data-error="true"] input,.campo[data-error="true"] select,.campo[data-error="true"] textarea{border-color:var(--aviso)}
+.campo[data-error="true"] .opciones{outline:1px solid var(--aviso);outline-offset:6px;border-radius:14px}
+.error{display:none;font-size:12.5px;color:var(--aviso);margin-top:7px}
+.campo[data-error="true"] .error{display:block}
+.req{color:var(--oliva)}
+
+/* ---------- tarjetas seleccionables ---------- */
+.opciones{display:grid;gap:10px}
+.opciones--par{grid-template-columns:1fr 1fr}
+.opcion{
+  position:relative;display:flex;align-items:center;gap:12px;
+  min-height:52px;padding:15px 16px;
+  background:var(--crema);border:1px solid rgba(51,48,31,.16);border-radius:12px;
+  cursor:pointer;transition:border-color .18s ease,background .18s ease;
+}
+.opcion:hover{border-color:rgba(51,48,31,.34)}
+.opcion input{position:absolute;opacity:0;width:1px;height:1px}
+.marca{
+  flex:0 0 auto;width:20px;height:20px;margin:0;border-radius:50%;
+  border:1.5px solid rgba(51,48,31,.3);display:grid;place-items:center;
+}
+.marca::after{
+  content:"";width:10px;height:6px;border-radius:0;background:none;
+  border-left:1.8px solid #F0EAD8;border-bottom:1.8px solid #F0EAD8;
+  transform:translateY(-1px) rotate(-45deg) scale(0);transform-origin:center;
+  transition:transform .18s cubic-bezier(.2,.7,.2,1);
+}
+.opcion b{display:block;font-weight:400;font-size:15px;line-height:1.3}
+.opcion span{display:block;font-size:12.5px;line-height:1.5;color:var(--tinta-55);margin-top:4px}
+.opcion:has(b+span),.opcion:has(span span){align-items:flex-start}
+.opcion:has(b+span) .marca,.opcion:has(span span) .marca{margin-top:2px}
+.opcion:has(input:checked){background:#EFEFE3;border-color:var(--oliva)}
+.opcion:has(input:checked) .marca{border-color:var(--oliva);background:var(--oliva)}
+.opcion:has(input:checked) .marca::after{transform:translateY(-1px) rotate(-45deg) scale(1)}
+.opcion:has(input:focus-visible){outline:2px solid var(--oliva);outline-offset:2px}
+.opcion .precio{font-family:var(--serif);font-size:17px;color:var(--oliva);margin-left:auto;white-space:nowrap;align-self:center}
+
+/* ---------- condicionales ---------- */
+[data-cond]{display:none}
+[data-cond].abierto{display:block;animation:entra .35s cubic-bezier(.2,.7,.2,1) both}
+.condicional{
+  margin-top:18px;padding-top:18px;border-top:1px dashed rgba(51,48,31,.22);
+}
+
+/* ---------- subida de archivos ---------- */
+.subida{
+  display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;
+  padding:26px 20px;border:1.5px dashed rgba(51,48,31,.26);border-radius:14px;
+  background:var(--crema);cursor:pointer;transition:border-color .18s ease,background .18s ease;
+}
+.subida:hover,.subida.encima{border-color:var(--oliva);background:#EFEFE3}
+.subida{position:relative}
+.subida input{position:absolute;width:1px;height:1px;padding:0;margin:0;border:0;opacity:0;clip:rect(0 0 0 0);clip-path:inset(50%);overflow:hidden;white-space:nowrap}
+.subida:has(input:focus-visible){outline:2px solid var(--oliva);outline-offset:3px}
+.subida b{font-weight:400;font-size:15.5px}
+.subida span{font-size:12.5px;color:var(--tinta-45)}
+.adjuntos{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.adjunto{
+  display:flex;align-items:center;gap:11px;
+  padding:11px 13px;background:var(--crema-2);border-radius:10px;font-size:13.5px;
+}
+.adjunto b{flex:1;font-weight:400;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.adjunto i{font-style:normal;font-size:12px;color:var(--tinta-45)}
+.adjunto button{
+  flex:0 0 auto;width:30px;height:30px;display:grid;place-items:center;
+  background:none;border:0;border-radius:50%;color:var(--tinta-45);font-size:18px;line-height:1;
+}
+.adjunto button:hover{background:rgba(51,48,31,.08);color:var(--tinta)}
+
+/* ---------- navegación ---------- */
+.acciones{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:30px}
+.cta{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  min-height:52px;padding:16px 28px;border:0;border-radius:999px;
+  font-size:13px;letter-spacing:.1em;text-transform:uppercase;
+  background:var(--oliva);color:var(--crema);
+  transition:background .2s ease;
+}
+.cta:hover{background:var(--oliva-osc)}
+.cta--linea{background:none;color:var(--tinta);border:1px solid rgba(51,48,31,.28)}
+.cta--linea:hover{background:rgba(51,48,31,.05)}
+.acciones .cta{flex:1 1 100%}
+.guardado{
+  font-size:12px;color:var(--tinta-45);flex:1 1 100%;
+  display:flex;align-items:center;gap:8px;
+}
+.guardado::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--menta)}
+
+/* ---------- pantalla inicial y final ---------- */
+.portada{background:var(--blanco);border:1px solid var(--linea-suave);border-radius:20px;padding:30px 22px}
+.portada h1{font-size:clamp(2.2rem,9vw,2.7rem);line-height:1.03}
+.portada__intro{font-size:16px;color:var(--tinta-70);margin-top:16px;max-width:54ch}
+.checklist{display:flex;flex-direction:column;gap:9px;margin:22px 0 0}
+.checklist li{display:flex;gap:11px;font-size:14.5px;color:var(--tinta-70)}
+.checklist li::before{
+  content:"";flex:0 0 auto;width:16px;height:16px;margin-top:4px;border-radius:4px;
+  border:1.5px solid var(--menta);
+}
+.nota{
+  display:flex;gap:12px;margin-top:24px;padding:16px 18px;
+  background:var(--crema-2);border-radius:12px;font-size:13.5px;line-height:1.55;color:var(--tinta-70);
+}
+.nota strong{font-weight:400;color:var(--tinta)}
+.mano{font-family:var(--mano);font-size:23px;color:var(--oliva);margin-top:20px}
+
+.resumen{display:flex;flex-direction:column;gap:0;margin-top:8px}
+.resumen__grupo{border-top:1px solid var(--linea)}
+.resumen__grupo:last-child{border-bottom:1px solid var(--linea)}
+.resumen__cab{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:15px 0 9px}
+.resumen__cab h3{font-size:20px}
+.resumen__editar{background:none;border:0;padding:0;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--oliva);text-decoration:underline}
+.resumen dl{display:grid;grid-template-columns:1fr;gap:8px;margin:0 0 16px}
+.resumen dt{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--tinta-45)}
+.resumen dd{margin:0 0 6px;font-size:14.5px;color:var(--tinta);white-space:pre-line}
+.resumen .vacio{color:var(--tinta-45);font-style:italic}
+.campo>label.confirmar,
+.confirmar{
+  display:flex;align-items:center;justify-content:flex-start;text-align:left;gap:12px;margin-top:24px;
+  padding:18px;background:var(--blanco);border:1px solid var(--linea-suave);border-radius:14px;
+  font-size:14px;line-height:1.5;color:var(--tinta-70);cursor:pointer;
+}
+.confirmar input{width:20px;height:20px;margin:0;accent-color:var(--oliva);flex:0 0 auto}
+.campo[data-error="true"] .confirmar{border-color:var(--aviso);background:#FDF6EC}
+.campo[data-error="true"] .confirmar input{outline:2px solid var(--aviso);outline-offset:2px}
+.confirmar strong{font-weight:400;color:var(--tinta)}
+
+.fin{background:var(--oliva);color:#F0EAD8;border-radius:20px;padding:38px 24px;text-align:left}
+.fin b{display:block;font-family:var(--mano);font-weight:500;font-size:46px;line-height:1;color:#F7F3E6}
+.fin h2{font-size:34px;color:#F7F3E6;margin-top:14px}
+.fin p{font-size:15.5px;color:rgba(240,234,216,.85);margin-top:14px;max-width:48ch}
+.fin .mano{color:var(--camomila);margin-top:22px;font-size:24px}
+
+/* ---------- pie ---------- */
+.pie{border-top:1px solid var(--linea-suave);margin-top:44px;padding:22px 20px 40px;text-align:center;font-size:12px;color:var(--tinta-45)}
+
+@media (prefers-reduced-motion:reduce){
+  .paso.activo,[data-cond].abierto{animation:none}
+  .progreso__valor{transition:none}
+}
+
+/* ---------- tablet ---------- */
+@media (min-width:640px){
+  .rejilla--par{grid-template-columns:1fr 1fr}
+  .campo--ancho{grid-column:1/-1}
+  .acciones .cta{flex:0 0 auto}
+  .guardado{flex:1;justify-content:flex-end}
+  .bloque{padding:26px 26px}
+  .portada{padding:38px 34px}
+  .resumen dl{grid-template-columns:180px 1fr;gap:10px 20px;align-items:baseline}
+  .resumen dt{padding-top:2px}
+  .resumen dd{margin:0}
+}
+
+/* ---------- desktop ---------- */
+@media (min-width:960px){
+  body{font-size:17px}
+  .barra__paso{display:none}
+  .marco{display:grid;grid-template-columns:284px 1fr;gap:56px;padding:44px 20px 88px}
+  .lateral{display:block;position:sticky;top:96px;align-self:start}
+  .lateral__titulo{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--tinta-45);margin-bottom:16px}
+  .indice{display:flex;flex-direction:column;gap:1px}
+  .indice__btn{
+    display:flex;align-items:center;gap:12px;width:100%;
+    padding:9px 12px;background:none;border:0;border-radius:10px;text-align:left;
+    font-size:14px;color:var(--tinta-55);transition:background .16s ease,color .16s ease;
+  }
+  .indice__btn:hover{background:rgba(51,48,31,.05);color:var(--tinta)}
+  .indice__n{
+    flex:0 0 auto;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;
+    font-size:10.5px;border:1px solid rgba(51,48,31,.22);color:var(--tinta-45);
+  }
+  .indice__btn[aria-current="step"]{background:#EFEFE3;color:var(--tinta)}
+  .indice__btn[aria-current="step"] .indice__n{background:var(--oliva);border-color:var(--oliva);color:#F0EAD8}
+  .indice__btn[data-completo="true"] .indice__n{background:var(--menta);border-color:var(--menta);color:var(--tinta)}
+
+  .paso h2{font-size:44px;line-height:1.02}
+  .paso__intro{font-size:16.5px;margin-top:16px}
+  .bloques{gap:28px;margin-top:34px}
+  .bloque{border-radius:20px;padding:30px 32px}
+  .bloque>h3{font-size:27px}
+  .rejilla{gap:18px}
+  .opciones--tres{grid-template-columns:repeat(3,1fr)}
+  .portada{padding:48px 46px}
+  .portada h1{font-size:52px}
+  .fin{padding:56px 52px}
+  .fin b{font-size:62px}
+  .fin h2{font-size:42px}
+  .acciones{margin-top:34px}
+  .pie{margin-top:56px;padding-bottom:20px}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#panel">Saltar al formulario</a>
+
+<header class="barra">
+  <div class="barra__fila">
+    <span class="logo">webparabodas</span>
+    <span class="barra__paso" id="etiqueta-paso">Briefing</span>
+  </div>
+  <div class="progreso" role="progressbar" aria-labelledby="etiqueta-paso" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <div class="progreso__valor" id="progreso"></div>
+  </div>
+</header>
+
+<div class="marco">
+
+  <aside class="lateral" aria-label="Pasos del briefing">
+    <p class="lateral__titulo">Vuestro briefing</p>
+    <nav class="indice" id="indice"></nav>
+  </aside>
+
+  <main class="panel" id="panel">
+    <form id="briefing" novalidate>
+
+      <!-- ============ PANTALLA INICIAL ============ -->
+      <section class="paso activo" data-paso="0" aria-label="Antes de empezar">
+        <div class="portada">
+          <p class="paso__eyebrow">Briefing de vuestra web</p>
+          <h1>Vamos a empezar con vuestra web</h1>
+          <p class="portada__intro">Para empezar a diseñar vuestra web necesitamos conoceros un poquito y recopilar toda la información que queréis compartir con vuestros invitados.</p>
+          <p class="portada__intro" style="margin-top:20px;color:var(--tinta)">Antes de empezar, os recomendamos tener preparadas:</p>
+          <ul class="checklist">
+            <li>Fotografías que queráis utilizar</li>
+            <li>Invitación, si ya la tenéis</li>
+            <li>Logo o monograma, si existe</li>
+            <li>Colores, tipografías o ilustraciones de vuestra boda</li>
+            <li>Información de ceremonia y celebración</li>
+            <li>Información sobre transporte, alojamiento, preboda o postboda, si aplica</li>
+            <li>Referencias visuales que os gusten</li>
+          </ul>
+          <p class="nota">
+            <svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="#6F6C43" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:2px"><circle cx="11" cy="11" r="8"></circle><path d="M11 7h.01M11 10v5"></path></svg>
+            <span><strong>Importante:</strong> utilizaremos la información y los archivos que nos facilitéis en este formulario para preparar vuestra web. Intentad incluir aquí todo el material necesario para que podamos empezar a trabajar.</span>
+          </p>
+          <p class="mano">No os preocupéis si algún apartado no aplica: el formulario se adapta a vuestras respuestas.</p>
+          <div class="acciones">
+            <button type="button" class="cta" data-ir="1">Empezar</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 01 SOBRE VOSOTROS ============ -->
+      <section class="paso" data-paso="1" data-titulo="Sobre vosotros" aria-label="Sobre vosotros" hidden>
+        <p class="paso__eyebrow">Paso 01</p>
+        <h2>Primero, contadnos quiénes sois.</h2>
+        <div class="bloques">
+          <div class="bloque">
+            <div class="rejilla rejilla--par">
+              <div class="campo" data-campo>
+                <label for="novio1">Nombre de uno de los novios <span class="req">*</span></label>
+                <input id="novio1" name="novio1" type="text" required autocomplete="off">
+                <p class="error">Este dato es necesario.</p>
+              </div>
+              <div class="campo" data-campo>
+                <label for="novio2">Nombre del otro <span class="req">*</span></label>
+                <input id="novio2" name="novio2" type="text" required autocomplete="off">
+                <p class="error">Este dato es necesario.</p>
+              </div>
+              <div class="campo" data-campo>
+                <label for="fecha_boda">Fecha de la boda <span class="req">*</span></label>
+                <input id="fecha_boda" name="fecha_boda" type="date" required>
+                <p class="error">Indicad la fecha.</p>
+              </div>
+              <div class="campo" data-campo>
+                <label for="email">Email de contacto <span class="req">*</span></label>
+                <input id="email" name="email" type="email" required autocomplete="email">
+                <p class="error">Revisad el email, parece incompleto.</p>
+              </div>
+              <div class="campo campo--ancho" data-campo>
+                <label for="telefono">Teléfono de contacto <span class="req">*</span></label>
+                <input id="telefono" name="telefono" type="tel" required autocomplete="tel">
+                <p class="error">Este dato es necesario.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bloque">
+            <h3>¿Cómo vais a utilizar vuestra web?</h3>
+            <p class="bloque__ayuda">Elegid la opción que encaje con vuestra boda.</p>
+            <div class="campo" data-campo>
+              <div class="opciones">
+                <label class="opcion">
+                  <input type="radio" name="uso" value="Invitación digital" required>
+                  <span class="marca" aria-hidden="true"></span>
+                  <span><b>Invitación digital</b><span>La web será vuestra invitación y la compartiréis directamente con vuestros invitados.</span></span>
+                </label>
+                <label class="opcion">
+                  <input type="radio" name="uso" value="Web de confirmación" required>
+                  <span class="marca" aria-hidden="true"></span>
+                  <span><b>Web de confirmación</b><span>Ya tenéis o vais a tener una invitación física y utilizaréis la web para ampliar la información y gestionar las confirmaciones.</span></span>
+                </label>
+              </div>
+              <p class="error">Elegid una opción.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 02 ESTILO ============ -->
+      <section class="paso" data-paso="2" data-titulo="Estilo de vuestra boda" aria-label="Estilo de vuestra boda" hidden>
+        <p class="paso__eyebrow">Paso 02</p>
+        <h2>Queremos que vuestra web encaje con vosotros.</h2>
+        <p class="paso__intro">Adaptaremos el diseño a la identidad y al estilo de vuestra boda.</p>
+        <div class="bloques">
+          <div class="bloque">
+            <h3>Identidad visual</h3>
+            <p class="bloque__ayuda">¿Tenéis ya definida una identidad visual para vuestra boda?</p>
+            <div class="campo" data-campo>
+              <div class="opciones opciones--tres">
+                <label class="opcion">
+                  <input type="radio" name="identidad" value="Sí, ya la tenemos definida" required>
+                  <span class="marca" aria-hidden="true"></span>
+                  <span><b>Sí, ya la tenemos definida</b></span>
+                </label>
+                <label class="opcion">
+                  <input type="radio" name="identidad" value="Tenemos algunos elementos" required>
+                  <span class="marca" aria-hidden="true"></span>
+                  <span><b>Tenemos algunos elementos</b></span>
+                </label>
+                <label class="opcion">
+                  <input type="radio" name="identidad" value="No, todavía no" required>
+                  <span class="marca" aria-hidden="true"></span>
+                  <span><b>No, todavía no</b></span>
+                </label>
+              </div>
+              <p class="error">Elegid una opción.</p>
+            </div>
+          </div>
+
+          <div class="bloque">
+            <h3>Material gráfico</h3>
+            <p class="bloque__ayuda">Adjuntad aquí todo el material que ya tengáis de vuestra boda: invitación, logo o monograma, paleta de colores, tipografías, ilustraciones o cualquier otro elemento gráfico que queráis que tengamos en cuenta.</p>
+            <label class="subida" data-subida>
+              <input type="file" name="material" multiple>
+              <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="#6F6C43" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 21V8M10 13l5-5 5 5"></path><path d="M5 20v3a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-3"></path></svg>
+              <b>Arrastrad los archivos o pulsad aquí</b>
+              <span>Podéis subir varios a la vez (máx. 15 MB en total, sumando también las fotos)</span>
+            </label>
+            <div class="adjuntos" data-lista></div>
+          </div>
+
+          <div class="bloque">
+            <h3>Fotografías</h3>
+            <p class="bloque__ayuda">Subid las fotografías que os gustaría que utilizásemos en vuestra web.</p>
+            <label class="subida" data-subida>
+              <input type="file" name="fotos" accept="image/*" multiple>
+              <svg width="30" height="30" viewBox="0 0 30 30" fill="none" stroke="#6F6C43" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="7" width="22" height="17" rx="2.5"></rect><circle cx="11" cy="13" r="2"></circle><path d="m5 21 6-5 5 4 4-3 5 4"></path></svg>
+              <b>Arrastrad vuestras fotos o pulsad aquí</b>
+              <span>JPG o PNG (máx. 15 MB en total, sumando también el material gráfico)</span>
+            </label>
+            <div class="adjuntos" data-lista></div>
+          </div>
+
+          <div class="bloque">
+            <div class="rejilla">
+              <div class="campo" data-campo>
+                <label for="colores">¿Hay algún color o gama de colores que queráis que utilicemos?</label>
+                <textarea id="colores" name="colores" rows="3"></textarea>
+              </div>
+              <div class="campo" data-campo>
+                <label for="referencias">¿Tenéis alguna referencia que os guste?</label>
+                <p class="pista">Podéis compartir enlaces de Pinterest, Instagram, webs u otras referencias que nos ayuden a entender el estilo que buscáis.</p>
+                <textarea id="referencias" name="referencias" rows="3"></textarea>
+              </div>
+              <div class="campo" data-campo>
+                <label for="no_queremos">¿Hay algún estilo, color o elemento que NO queráis que utilicemos?</label>
+                <textarea id="no_queremos" name="no_queremos" rows="3"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 03 VUESTRO ENLACE ============ -->
+      <section class="paso" data-paso="3" data-titulo="Vuestro enlace" aria-label="Vuestro enlace" hidden>
+        <p class="paso__eyebrow">Paso 03</p>
+        <h2>Elegid cómo queréis compartir vuestra web.</h2>
+        <p class="paso__intro">Vuestra web incluye un subdominio personalizado de webparabodas sin coste adicional. Si preferís vuestro propio dominio, podéis añadirlo por +20 €.</p>
+        <div class="bloques">
+          <div class="bloque">
+            <h3>¿Qué dirección queréis para vuestra web?</h3>
+            <div class="campo" data-campo>
+              <div class="opciones">
+                <label class="opcion">
+                  <input type="radio" name="dominio" value="Subdominio incluido" required>
+                  <span class="marca" aria-hidden="true"></span>
+                  <span><b>Subdominio de webparabodas</b><span>Por ejemplo: mariayalberto.webparabodas.es</span></span>
+                  <span class="precio">Incluido</span>
+                </label>
+                <label class="opcion">
+                  <input type="radio" name="dominio" value="Dominio propio (+20 €)" required>
+                  <span class="marca" aria-hidden="true"></span>
+                  <span><b>Dominio propio</b><span>Por ejemplo: mariayalberto.com</span></span>
+                  <span class="precio">+20 €</span>
+                </label>
+              </div>
+              <p class="error">Elegid una opción.</p>
+            </div>
+          </div>
+
+          <div data-cond="dominio=Subdominio incluido">
+            <div class="bloque">
+              <h3>Vuestro subdominio</h3>
+              <p class="bloque__ayuda">Indicad dos opciones por orden de preferencia. Comprobaremos su disponibilidad antes de publicar vuestra web.</p>
+              <div class="rejilla rejilla--par">
+                <div class="campo" data-campo>
+                  <label for="sub1">Opción 1</label>
+                  <input id="sub1" name="sub1" type="text" placeholder="mariayalberto">
+                </div>
+                <div class="campo" data-campo>
+                  <label for="sub2">Opción 2</label>
+                  <input id="sub2" name="sub2" type="text">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div data-cond="dominio=Dominio propio (+20 €)">
+            <div class="bloque">
+              <h3>Vuestro dominio propio</h3>
+              <p class="bloque__ayuda">Indicad dos opciones por orden de preferencia. Comprobaremos su disponibilidad antes de contratarlo.</p>
+              <div class="rejilla rejilla--par">
+                <div class="campo" data-campo>
+                  <label for="dom1">Opción 1</label>
+                  <input id="dom1" name="dom1" type="text" placeholder="mariayalberto.com">
+                </div>
+                <div class="campo" data-campo>
+                  <label for="dom2">Opción 2</label>
+                  <input id="dom2" name="dom2" type="text">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 04 EL GRAN DÍA ============ -->
+      <section class="paso" data-paso="4" data-titulo="El gran día" aria-label="El gran día" hidden>
+        <p class="paso__eyebrow">Paso 04</p>
+        <h2>El gran día.</h2>
+        <div class="bloques">
+          <div class="bloque">
+            <h3>Ceremonia</h3>
+            <div class="rejilla rejilla--par">
+              <div class="campo" data-campo>
+                <label for="cer_lugar">Nombre del lugar <span class="req">*</span></label>
+                <input id="cer_lugar" name="cer_lugar" type="text" required>
+                <p class="error">Este dato es necesario.</p>
+              </div>
+              <div class="campo" data-campo>
+                <label for="cer_hora">Hora de la ceremonia <span class="req">*</span></label>
+                <input id="cer_hora" name="cer_hora" type="time" required>
+                <p class="error">Indicad la hora.</p>
+              </div>
+              <div class="campo campo--ancho" data-campo>
+                <label for="cer_dir">Dirección <span class="req">*</span></label>
+                <input id="cer_dir" name="cer_dir" type="text" required>
+                <p class="error">Este dato es necesario.</p>
+              </div>
+              <div class="campo campo--ancho" data-campo>
+                <label for="cer_maps">Enlace de Google Maps</label>
+                <input id="cer_maps" name="cer_maps" type="url" placeholder="https://">
+              </div>
+            </div>
+          </div>
+
+          <div class="bloque">
+            <h3>Celebración</h3>
+            <div class="rejilla rejilla--par">
+              <div class="campo" data-campo>
+                <label for="cel_lugar">Nombre del lugar <span class="req">*</span></label>
+                <input id="cel_lugar" name="cel_lugar" type="text" required>
+                <p class="error">Este dato es necesario.</p>
+              </div>
+              <div class="campo" data-campo>
+                <label for="cel_hora">Hora de inicio <span class="req">*</span></label>
+                <input id="cel_hora" name="cel_hora" type="time" required>
+                <p class="error">Indicad la hora.</p>
+              </div>
+              <div class="campo campo--ancho" data-campo>
+                <label for="cel_dir">Dirección <span class="req">*</span></label>
+                <input id="cel_dir" name="cel_dir" type="text" required>
+                <p class="error">Este dato es necesario.</p>
+              </div>
+              <div class="campo campo--ancho" data-campo>
+                <label for="cel_maps">Enlace de Google Maps</label>
+                <input id="cel_maps" name="cel_maps" type="url" placeholder="https://">
+              </div>
+            </div>
+          </div>
+
+          <div class="bloque">
+            <h3>Información adicional</h3>
+            <div class="campo" data-campo>
+              <label for="dia_extra">¿Hay alguna indicación sobre la ceremonia o celebración que debamos incluir?</label>
+              <p class="pista">Por ejemplo: hora recomendada de llegada, acceso o indicaciones especiales.</p>
+              <textarea id="dia_extra" name="dia_extra" rows="3"></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 05 TRANSPORTE Y PARKING ============ -->
+      <section class="paso" data-paso="5" data-titulo="Transporte" aria-label="Transporte" hidden>
+        <p class="paso__eyebrow">Paso 05</p>
+        <h2>Transporte.</h2>
+        <div class="bloques">
+          <div class="bloque">
+            <h3>¿Queréis incluir información sobre transporte o autobuses?</h3>
+            <div class="campo" data-campo>
+              <div class="opciones opciones--par">
+                <label class="opcion"><input type="radio" name="transporte" value="Sí" required><span class="marca" aria-hidden="true"></span><span><b>Sí</b></span></label>
+                <label class="opcion"><input type="radio" name="transporte" value="No" required><span class="marca" aria-hidden="true"></span><span><b>No</b></span></label>
+              </div>
+              <p class="error">Elegid una opción.</p>
+            </div>
+
+            <div class="condicional" data-cond="transporte=Sí">
+              <div class="campo" data-campo>
+                <p class="campo__titulo">¿Habrá servicio de autobús?</p>
+                <div class="opciones opciones--par">
+                  <label class="opcion"><input type="radio" name="autobus" value="Sí"><span class="marca" aria-hidden="true"></span><span><b>Sí</b></span></label>
+                  <label class="opcion"><input type="radio" name="autobus" value="No"><span class="marca" aria-hidden="true"></span><span><b>No</b></span></label>
+                </div>
+              </div>
+
+              <div data-cond="autobus=Sí">
+                <div class="rejilla" style="margin-top:18px">
+                  <div class="campo" data-campo>
+                    <label for="bus_puntos">Punto o puntos de recogida</label>
+                    <textarea id="bus_puntos" name="bus_puntos" rows="2"></textarea>
+                  </div>
+                  <div class="campo" data-campo>
+                    <label for="bus_ida">Horario o horarios de ida</label>
+                    <textarea id="bus_ida" name="bus_ida" rows="2"></textarea>
+                  </div>
+                  <div class="campo" data-campo>
+                    <label for="bus_vuelta">Horario o horarios de vuelta</label>
+                    <textarea id="bus_vuelta" name="bus_vuelta" rows="2"></textarea>
+                  </div>
+                  <div class="campo" data-campo>
+                    <label for="bus_extra">Información adicional sobre el transporte</label>
+                    <textarea id="bus_extra" name="bus_extra" rows="2"></textarea>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 06 ALOJAMIENTO ============ -->
+      <section class="paso" data-paso="6" data-titulo="Alojamiento" aria-label="Alojamiento" hidden>
+        <p class="paso__eyebrow">Paso 06</p>
+        <h2>Alojamiento.</h2>
+        <div class="bloques">
+          <div class="bloque">
+            <h3>¿Queréis recomendar alojamientos a vuestros invitados?</h3>
+            <div class="campo" data-campo>
+              <div class="opciones opciones--par">
+                <label class="opcion"><input type="radio" name="alojamiento" value="Sí" required><span class="marca" aria-hidden="true"></span><span><b>Sí</b></span></label>
+                <label class="opcion"><input type="radio" name="alojamiento" value="No" required><span class="marca" aria-hidden="true"></span><span><b>No</b></span></label>
+              </div>
+              <p class="error">Elegid una opción.</p>
+            </div>
+          </div>
+
+          <div data-cond="alojamiento=Sí">
+            <div class="bloques">
+              <div class="bloque">
+                <p class="subtitulo">Alojamiento 1</p>
+                <div class="rejilla rejilla--par">
+                  <div class="campo" data-campo><label for="alo1_nombre">Nombre</label><input id="alo1_nombre" name="alo1_nombre" type="text"></div>
+                  <div class="campo" data-campo><label for="alo1_dir">Dirección</label><input id="alo1_dir" name="alo1_dir" type="text"></div>
+                  <div class="campo" data-campo><label for="alo1_cod">Código o descuento, si existe</label><input id="alo1_cod" name="alo1_cod" type="text"></div>
+                  <div class="campo" data-campo><label for="alo1_url">Enlace a la web o reserva</label><input id="alo1_url" name="alo1_url" type="url" placeholder="https://"></div>
+                </div>
+
+                <p class="subtitulo" style="margin-top:24px">Alojamiento 2 · opcional</p>
+                <div class="rejilla rejilla--par">
+                  <div class="campo" data-campo><label for="alo2_nombre">Nombre</label><input id="alo2_nombre" name="alo2_nombre" type="text"></div>
+                  <div class="campo" data-campo><label for="alo2_dir">Dirección</label><input id="alo2_dir" name="alo2_dir" type="text"></div>
+                  <div class="campo" data-campo><label for="alo2_cod">Código o descuento, si existe</label><input id="alo2_cod" name="alo2_cod" type="text"></div>
+                  <div class="campo" data-campo><label for="alo2_url">Enlace a la web o reserva</label><input id="alo2_url" name="alo2_url" type="url" placeholder="https://"></div>
+                </div>
+
+                <p class="subtitulo" style="margin-top:24px">Alojamiento 3 · opcional</p>
+                <div class="rejilla rejilla--par">
+                  <div class="campo" data-campo><label for="alo3_nombre">Nombre</label><input id="alo3_nombre" name="alo3_nombre" type="text"></div>
+                  <div class="campo" data-campo><label for="alo3_dir">Dirección</label><input id="alo3_dir" name="alo3_dir" type="text"></div>
+                  <div class="campo" data-campo><label for="alo3_cod">Código o descuento, si existe</label><input id="alo3_cod" name="alo3_cod" type="text"></div>
+                  <div class="campo" data-campo><label for="alo3_url">Enlace a la web o reserva</label><input id="alo3_url" name="alo3_url" type="url" placeholder="https://"></div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 07 PREBODA ============ -->
+      <section class="paso" data-paso="7" data-titulo="Preboda" aria-label="Preboda" hidden>
+        <p class="paso__eyebrow">Paso 07</p>
+        <h2>Preboda.</h2>
+        <div class="bloques">
+          <div class="bloque">
+            <h3>¿Habrá preboda?</h3>
+            <div class="campo" data-campo>
+              <div class="opciones opciones--par">
+                <label class="opcion"><input type="radio" name="preboda" value="Sí" required><span class="marca" aria-hidden="true"></span><span><b>Sí</b></span></label>
+                <label class="opcion"><input type="radio" name="preboda" value="No" required><span class="marca" aria-hidden="true"></span><span><b>No</b></span></label>
+              </div>
+              <p class="error">Elegid una opción.</p>
+            </div>
+            <div class="condicional" data-cond="preboda=Sí">
+              <div class="rejilla rejilla--par">
+                <div class="campo campo--ancho" data-campo><label for="pre_lugar">Nombre o lugar</label><input id="pre_lugar" name="pre_lugar" type="text"></div>
+                <div class="campo" data-campo><label for="pre_fecha">Fecha</label><input id="pre_fecha" name="pre_fecha" type="date"></div>
+                <div class="campo" data-campo><label for="pre_hora">Hora</label><input id="pre_hora" name="pre_hora" type="time"></div>
+                <div class="campo campo--ancho" data-campo><label for="pre_dir">Dirección</label><input id="pre_dir" name="pre_dir" type="text"></div>
+                <div class="campo campo--ancho" data-campo><label for="pre_maps">Enlace de Google Maps</label><input id="pre_maps" name="pre_maps" type="url" placeholder="https://"></div>
+                <div class="campo campo--ancho" data-campo><label for="pre_extra">Información adicional que queráis compartir con vuestros invitados</label><textarea id="pre_extra" name="pre_extra" rows="3"></textarea></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 08 POSTBODA ============ -->
+      <section class="paso" data-paso="8" data-titulo="Postboda" aria-label="Postboda" hidden>
+        <p class="paso__eyebrow">Paso 08</p>
+        <h2>Postboda.</h2>
+        <div class="bloques">
+          <div class="bloque">
+            <h3>¿Habrá postboda?</h3>
+            <div class="campo" data-campo>
+              <div class="opciones opciones--par">
+                <label class="opcion"><input type="radio" name="postboda" value="Sí" required><span class="marca" aria-hidden="true"></span><span><b>Sí</b></span></label>
+                <label class="opcion"><input type="radio" name="postboda" value="No" required><span class="marca" aria-hidden="true"></span><span><b>No</b></span></label>
+              </div>
+              <p class="error">Elegid una opción.</p>
+            </div>
+            <div class="condicional" data-cond="postboda=Sí">
+              <div class="rejilla rejilla--par">
+                <div class="campo campo--ancho" data-campo><label for="post_lugar">Nombre o lugar</label><input id="post_lugar" name="post_lugar" type="text"></div>
+                <div class="campo" data-campo><label for="post_fecha">Fecha</label><input id="post_fecha" name="post_fecha" type="date"></div>
+                <div class="campo" data-campo><label for="post_hora">Hora</label><input id="post_hora" name="post_hora" type="time"></div>
+                <div class="campo campo--ancho" data-campo><label for="post_dir">Dirección</label><input id="post_dir" name="post_dir" type="text"></div>
+                <div class="campo campo--ancho" data-campo><label for="post_maps">Enlace de Google Maps</label><input id="post_maps" name="post_maps" type="url" placeholder="https://"></div>
+                <div class="campo campo--ancho" data-campo><label for="post_extra">Información adicional que queráis compartir con vuestros invitados</label><textarea id="post_extra" name="post_extra" rows="3"></textarea></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 09 REGALOS ============ -->
+      <section class="paso" data-paso="9" data-titulo="Regalos" aria-label="Regalos" hidden>
+        <p class="paso__eyebrow">Paso 09</p>
+        <h2>Regalos.</h2>
+        <div class="bloques">
+          <div class="bloque">
+            <h3>¿Queréis incluir información sobre regalos?</h3>
+            <div class="campo" data-campo>
+              <div class="opciones opciones--par">
+                <label class="opcion"><input type="radio" name="regalos" value="Sí" required><span class="marca" aria-hidden="true"></span><span><b>Sí</b></span></label>
+                <label class="opcion"><input type="radio" name="regalos" value="No" required><span class="marca" aria-hidden="true"></span><span><b>No</b></span></label>
+              </div>
+              <p class="error">Elegid una opción.</p>
+            </div>
+            <div class="condicional" data-cond="regalos=Sí">
+              <div class="rejilla">
+                <div class="campo" data-campo>
+                  <label for="reg_texto">¿Qué texto queréis mostrar?</label>
+                  <p class="pista">Si no tenéis un texto preparado, podéis indicarnos simplemente qué queréis comunicar y nosotros lo adaptaremos para vuestra web.</p>
+                  <textarea id="reg_texto" name="reg_texto" rows="4"></textarea>
+                </div>
+                <div class="campo" data-campo><label for="reg_cuenta">Número de cuenta</label><input id="reg_cuenta" name="reg_cuenta" type="text"></div>
+                <div class="campo" data-campo><label for="reg_extra">Otra información que queráis incluir</label><textarea id="reg_extra" name="reg_extra" rows="3"></textarea></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 10 CONFIRMACIÓN ============ -->
+      <section class="paso" data-paso="10" data-titulo="Confirmación de asistencia" aria-label="Confirmación de asistencia" hidden>
+        <p class="paso__eyebrow">Paso 10</p>
+        <h2>Ahora vamos a preparar el formulario de vuestros invitados.</h2>
+        <p class="paso__intro">Cada invitado realizará su confirmación de manera individual, para que toda la información quede correctamente organizada por persona.</p>
+        <div class="bloques">
+          <div class="bloque">
+            <h3>Incluido siempre</h3>
+            <p class="bloque__ayuda">Estas preguntas forman la base del formulario de vuestros invitados.</p>
+            <ul class="checklist">
+              <li>Nombre y apellidos</li>
+              <li>¿Asistirás a la boda? · Sí / No</li>
+              <li>¿Tienes alguna alergia, intolerancia o necesitas un menú especial? · Sí / No, con detalle si responde que sí</li>
+            </ul>
+            <p class="bloque__ayuda" style="margin-top:20px;margin-bottom:0">Además, añadiremos automáticamente las preguntas de <strong style="font-weight:400;color:var(--tinta)">autobús</strong>, <strong style="font-weight:400;color:var(--tinta)">preboda</strong> y <strong style="font-weight:400;color:var(--tinta)">postboda</strong> según lo que hayáis indicado en los pasos anteriores.</p>
+          </div>
+
+          <div class="bloque">
+            <h3>Pregunta personalizada</h3>
+            <p class="bloque__ayuda">La web incluye una pregunta adicional personalizada: elección de menú, punto de recogida del autobús, canción para la fiesta, talla de zapatillas o cualquier otra información que necesitéis recopilar.</p>
+            <div class="campo" data-campo>
+              <p class="campo__titulo">¿Queréis añadir una pregunta personalizada?</p>
+              <div class="opciones opciones--par">
+                <label class="opcion"><input type="radio" name="personalizada" value="Sí" required><span class="marca" aria-hidden="true"></span><span><b>Sí</b></span></label>
+                <label class="opcion"><input type="radio" name="personalizada" value="No" required><span class="marca" aria-hidden="true"></span><span><b>No</b></span></label>
+              </div>
+              <p class="error">Elegid una opción.</p>
+            </div>
+            <div class="condicional" data-cond="personalizada=Sí">
+              <div class="rejilla">
+                <div class="campo" data-campo>
+                  <label for="pers_pregunta">Escribid la pregunta</label>
+                  <textarea id="pers_pregunta" name="pers_pregunta" rows="2"></textarea>
+                </div>
+                <div class="campo" data-campo>
+                  <p class="campo__titulo">¿Cómo queréis que respondan?</p>
+                  <div class="opciones opciones--tres">
+                    <label class="opcion"><input type="radio" name="pers_tipo" value="Respuesta libre"><span class="marca" aria-hidden="true"></span><span><b>Respuesta libre</b></span></label>
+                    <label class="opcion"><input type="radio" name="pers_tipo" value="Sí / No"><span class="marca" aria-hidden="true"></span><span><b>Sí / No</b></span></label>
+                    <label class="opcion"><input type="radio" name="pers_tipo" value="Varias opciones"><span class="marca" aria-hidden="true"></span><span><b>Entre varias opciones</b></span></label>
+                  </div>
+                </div>
+                <div data-cond="pers_tipo=Varias opciones">
+                  <div class="campo" data-campo>
+                    <label for="pers_opciones">Indicad las opciones disponibles</label>
+                    <p class="pista">Una por línea.</p>
+                    <textarea id="pers_opciones" name="pers_opciones" rows="4"></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 11 RECEPCIÓN ============ -->
+      <section class="paso" data-paso="11" data-titulo="Recepción de confirmaciones" aria-label="Recepción de confirmaciones" hidden>
+        <p class="paso__eyebrow">Paso 11</p>
+        <h2>¿Cómo queréis recibir las respuestas?</h2>
+        <div class="bloques">
+          <div class="bloque">
+            <div class="campo" data-campo>
+              <div class="opciones">
+                <label class="opcion">
+                  <input type="radio" name="recepcion" value="Por email · incluido" required>
+                  <span class="marca" aria-hidden="true"></span>
+                  <span><b>Por email</b><span>Recibiréis las confirmaciones de vuestros invitados directamente por email.</span></span>
+                  <span class="precio">Incluido</span>
+                </label>
+                <label class="opcion">
+                  <input type="radio" name="recepcion" value="Google Sheets (+20 €)" required>
+                  <span class="marca" aria-hidden="true"></span>
+                  <span><b>Google Sheets</b><span>Todas las respuestas quedarán recogidas automáticamente en un único documento, organizado por invitado y actualizado en tiempo real.</span></span>
+                  <span class="precio">+20 €</span>
+                </label>
+              </div>
+              <p class="error">Elegid una opción.</p>
+            </div>
+          </div>
+
+          <div class="bloque">
+            <h3>Email de recepción</h3>
+            <div class="campo" data-campo>
+              <label for="email_conf">Email donde queréis recibir las confirmaciones <span class="req">*</span></label>
+              <input id="email_conf" name="email_conf" type="email" required>
+              <p class="error">Revisad el email, parece incompleto.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 12 INFORMACIÓN ADICIONAL ============ -->
+      <section class="paso" data-paso="12" data-titulo="Información adicional" aria-label="Información adicional" hidden>
+        <p class="paso__eyebrow">Paso 12</p>
+        <h2>¿Queréis contarnos algo más?</h2>
+        <div class="bloques">
+          <div class="bloque">
+            <div class="campo" data-campo>
+              <label for="adicional">¿Hay alguna otra información que queráis incluir en vuestra web?</label>
+              <p class="pista">Contadnos cualquier detalle que no haya aparecido en los apartados anteriores y que queráis compartir con vuestros invitados.</p>
+              <textarea id="adicional" name="adicional" rows="6"></textarea>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ 13 REVISIÓN ============ -->
+      <section class="paso" data-paso="13" data-titulo="Revisión final" aria-label="Revisión final" hidden>
+        <p class="paso__eyebrow">Paso 13</p>
+        <h2>Ya casi está.</h2>
+        <p class="paso__intro">Antes de enviar el briefing, revisad que toda la información facilitada sea correcta. Trabajaremos con estos contenidos y archivos para preparar la primera versión de vuestra web.</p>
+        <div class="resumen" id="resumen"></div>
+        <p class="nota" style="margin-top:24px">
+          <svg width="20" height="20" viewBox="0 0 22 22" fill="none" stroke="#6F6C43" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:2px"><circle cx="11" cy="11" r="8"></circle><path d="M11 7h.01M11 10v5"></path></svg>
+          <span>La web incluye <strong>una ronda de cambios</strong> una vez presentada la primera versión.</span>
+        </p>
+        <div class="campo" data-campo>
+          <label class="confirmar">
+            <input type="checkbox" name="confirmado" required>
+            <span>Confirmamos que hemos revisado la información y podéis empezar a trabajar con ella.</span>
+          </label>
+          <p class="error">Necesitamos vuestra confirmación para enviar el briefing.</p>
+        </div>
+      </section>
+
+      <!-- ============ ENVIADO ============ -->
+      <section class="paso" data-paso="14" aria-label="Briefing enviado" hidden>
+        <div class="fin">
+          <b>¡Ya tenemos vuestro briefing!</b>
+          <p>Gracias por enviarnos toda la información. Revisaremos el contenido y los archivos para empezar a preparar vuestra web. Si necesitamos aclarar algún detalle antes de comenzar, nos pondremos en contacto con vosotros.</p>
+          <p class="mano">¡Ahora sí, vuestra web empieza a tomar forma!</p>
+        </div>
+      </section>
+
+      <div class="acciones" id="acciones" hidden>
+        <button type="button" class="cta cta--linea" id="btn-atras">Anterior</button>
+        <button type="button" class="cta" id="btn-siguiente">Continuar</button>
+        <span class="guardado" id="guardado">Guardado automáticamente</span>
+      </div>
+    </form>
+
+    <p class="pie">webparabodas.es · Si tenéis cualquier duda al completarlo, escribidnos a <a href="mailto:hola@webparabodas.es" style="color:var(--oliva)">hola@webparabodas.es</a></p>
+  </main>
+</div>
+
+<script>
+(function () {
+  var form = document.getElementById('briefing');
+  var pasos = Array.prototype.slice.call(form.querySelectorAll('.paso'));
+  var ULTIMO = 13, FIN = 14;
+  var actual = 0;
+  var CLAVE = 'webparabodas-briefing-v1';
+
+  /* Pega aquí la URL de tu Apps Script del briefing (aplicación web) */
+  var GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzH6NW_wujO8r6SZN2BOwEnmgEIjPrPgqo9AeeCG04-5qJ2rBQKtW4e8wYxOHTZYJ9Jmg/exec';
+  var MAX_ADJUNTOS_BYTES = 15 * 1024 * 1024; /* 15 MB en total entre material y fotos */
+
+  /* ---------- índice lateral ---------- */
+  var indice = document.getElementById('indice');
+  pasos.forEach(function (p) {
+    var n = Number(p.dataset.paso);
+    if (!p.dataset.titulo) return;
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'indice__btn';
+    b.dataset.ir = String(n);
+    b.innerHTML = '<span class="indice__n">' + String(n).padStart(2, '0') + '</span><span>' + p.dataset.titulo + '</span>';
+    indice.appendChild(b);
+  });
+
+  /* ---------- persistencia ---------- */
+  function guardar() {
+    try {
+      var d = {};
+      new FormData(form).forEach(function (v, k) { d[k] = v; });
+      form.querySelectorAll('input[type=checkbox]').forEach(function (c) { d[c.name] = c.checked; });
+      localStorage.setItem(CLAVE, JSON.stringify({ paso: actual, datos: d }));
+      var g = document.getElementById('guardado');
+      g.textContent = 'Guardado';
+      clearTimeout(guardar._t);
+      guardar._t = setTimeout(function () { g.textContent = 'Guardado automáticamente'; }, 1600);
+    } catch (e) {}
+  }
+  function recuperar() {
+    var bruto;
+    try { bruto = localStorage.getItem(CLAVE); } catch (e) { return; }
+    if (!bruto) return;
+    var g;
+    try { g = JSON.parse(bruto); } catch (e) { return; }
+    var d = (g && g.datos) || {};
+    Object.keys(d).forEach(function (k) {
+      var campos = form.querySelectorAll('[name="' + k + '"]');
+      if (!campos.length) return;
+      if (campos[0].type === 'radio') {
+        campos.forEach(function (r) { r.checked = (r.value === d[k]); });
+      } else if (campos[0].type === 'checkbox') {
+        campos[0].checked = !!d[k];
+      } else if (campos[0].type !== 'file') {
+        campos[0].value = d[k];
+      }
+    });
+    if (g && typeof g.paso === 'number' && g.paso > 0 && g.paso < FIN) actual = g.paso;
+  }
+
+  /* ---------- condicionales ---------- */
+  function valor(nombre) {
+    var c = form.querySelector('[name="' + nombre + '"]:checked');
+    return c ? c.value : null;
+  }
+  function condiciones() {
+    form.querySelectorAll('[data-cond]').forEach(function (b) {
+      var partes = b.dataset.cond.split('=');
+      var padreVisible = !b.closest('[data-cond]:not(.abierto)') || b.closest('[data-cond]:not(.abierto)') === b;
+      var cumple = valor(partes[0]) === partes[1] && padreVisible;
+      b.classList.toggle('abierto', cumple);
+    });
+  }
+
+  /* ---------- validación ---------- */
+  function visible(el) { return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length); }
+  function marcar(campo, error) { if (campo) campo.dataset.error = String(error); }
+
+  function validarPaso(n) {
+    var paso = pasos[n];
+    var ok = true;
+    paso.querySelectorAll('[data-campo]').forEach(function (campo) {
+      marcar(campo, false);
+      if (!visible(campo)) return;
+      var req = campo.querySelector('[required]');
+      if (!req) return;
+      var fallo = false;
+      if (req.type === 'radio') {
+        fallo = !form.querySelector('[name="' + req.name + '"]:checked');
+      } else if (req.type === 'checkbox') {
+        fallo = !req.checked;
+      } else if (req.type === 'email') {
+        fallo = !/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(req.value);
+      } else {
+        fallo = !String(req.value).trim();
+      }
+      if (fallo) { marcar(campo, true); ok = false; }
+    });
+    if (!ok) {
+      var primero = paso.querySelector('[data-error="true"]');
+      if (primero) {
+        var foco = primero.querySelector('input,select,textarea');
+        if (foco) foco.focus({ preventScroll: true });
+        window.scrollTo({ top: Math.max(0, primero.getBoundingClientRect().top + window.pageYOffset - 120), behavior: 'smooth' });
+      }
+    }
+    return ok;
+  }
+
+  /* ---------- resumen ---------- */
+  var MAPA = [
+    ['Sobre vosotros', 1, [['novio1','Uno de los novios'],['novio2','El otro'],['fecha_boda','Fecha de la boda'],['email','Email'],['telefono','Teléfono'],['uso','Uso de la web']]],
+    ['Estilo', 2, [['identidad','Identidad visual'],['colores','Colores'],['referencias','Referencias'],['no_queremos','Lo que no queréis'],['__material','Material gráfico'],['__fotos','Fotografías']]],
+    ['Vuestro enlace', 3, [['dominio','Tipo de dirección'],['sub1','Subdominio · opción 1'],['sub2','Subdominio · opción 2'],['dom1','Dominio · opción 1'],['dom2','Dominio · opción 2']]],
+    ['El gran día', 4, [['cer_lugar','Ceremonia'],['cer_hora','Hora ceremonia'],['cer_dir','Dirección ceremonia'],['cel_lugar','Celebración'],['cel_hora','Hora celebración'],['cel_dir','Dirección celebración'],['dia_extra','Indicaciones']]],
+    ['Transporte', 5, [['transporte','Incluir transporte'],['autobus','Autobús'],['bus_puntos','Puntos de recogida'],['bus_ida','Horarios de ida'],['bus_vuelta','Horarios de vuelta'],['bus_extra','Info adicional']]],
+    ['Alojamiento', 6, [['alojamiento','Recomendar alojamientos'],['alo1_nombre','Alojamiento 1'],['alo2_nombre','Alojamiento 2'],['alo3_nombre','Alojamiento 3']]],
+    ['Preboda', 7, [['preboda','Habrá preboda'],['pre_lugar','Lugar'],['pre_fecha','Fecha'],['pre_hora','Hora'],['pre_dir','Dirección']]],
+    ['Postboda', 8, [['postboda','Habrá postboda'],['post_lugar','Lugar'],['post_fecha','Fecha'],['post_hora','Hora'],['post_dir','Dirección']]],
+    ['Regalos', 9, [['regalos','Incluir regalos'],['reg_texto','Texto'],['reg_cuenta','Número de cuenta']]],
+    ['Confirmación de asistencia', 10, [['personalizada','Pregunta personalizada'],['pers_pregunta','La pregunta'],['pers_tipo','Tipo de respuesta'],['pers_opciones','Opciones']]],
+    ['Recepción', 11, [['recepcion','Cómo recibirlas'],['email_conf','Email de recepción']]],
+    ['Información adicional', 12, [['adicional','Notas']]]
+  ];
+  var adjuntos = { material: [], fotos: [] };
+
+  function pintarResumen() {
+    var d = {};
+    new FormData(form).forEach(function (v, k) { if (typeof v === 'string') d[k] = v; });
+    var cont = document.getElementById('resumen');
+    cont.innerHTML = '';
+    MAPA.forEach(function (grupo) {
+      var filas = grupo[2].map(function (par) {
+        var v;
+        if (par[0] === '__material') v = adjuntos.material.length ? adjuntos.material.length + ' archivo(s)' : '';
+        else if (par[0] === '__fotos') v = adjuntos.fotos.length ? adjuntos.fotos.length + ' archivo(s)' : '';
+        else v = (d[par[0]] || '').trim();
+        return v ? '<dt>' + par[1] + '</dt><dd>' + v.replace(/[<>&]/g, function (c) { return ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' })[c]; }) + '</dd>' : '';
+      }).filter(Boolean).join('');
+      var div = document.createElement('div');
+      div.className = 'resumen__grupo';
+      div.innerHTML =
+        '<div class="resumen__cab"><h3>' + grupo[0] + '</h3>' +
+        '<button type="button" class="resumen__editar" data-ir="' + grupo[1] + '">Editar</button></div>' +
+        '<dl>' + (filas || '<dd class="vacio">Sin información en este apartado.</dd>') + '</dl>';
+      cont.appendChild(div);
+    });
+  }
+
+  /* ---------- navegación ---------- */
+  function ir(n, validando) {
+    if (validando && n > actual) {
+      for (var i = actual; i < n; i++) if (i > 0 && !validarPaso(i)) return;
+    }
+    actual = n;
+    pasos.forEach(function (p) {
+      var suyo = Number(p.dataset.paso) === n;
+      p.classList.toggle('activo', suyo);
+      p.hidden = !suyo;
+    });
+
+    var acciones = document.getElementById('acciones');
+    acciones.hidden = (n === 0 || n === FIN);
+    document.getElementById('btn-atras').hidden = (n <= 1);
+    document.getElementById('btn-siguiente').textContent = (n === ULTIMO) ? 'Enviar briefing' : 'Continuar';
+
+    var pct = n === 0 ? 0 : Math.round(Math.min(n, ULTIMO) / ULTIMO * 100);
+    document.getElementById('progreso').style.width = pct + '%';
+    document.querySelector('.progreso').setAttribute('aria-valuenow', String(pct));
+    var etiqueta = document.getElementById('etiqueta-paso');
+    etiqueta.textContent = (n === 0) ? 'Briefing' : (n === FIN) ? 'Enviado' : 'Paso ' + n + ' de ' + ULTIMO;
+
+    indice.querySelectorAll('.indice__btn').forEach(function (b) {
+      var bn = Number(b.dataset.ir);
+      if (bn === n) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current');
+      b.dataset.completo = String(bn < n);
+    });
+
+    if (n === ULTIMO) pintarResumen();
+    condiciones();
+    guardar();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  document.getElementById('btn-siguiente').addEventListener('click', function () {
+    if (!validarPaso(actual)) return;
+    if (actual === ULTIMO) {
+      enviarBriefing();
+      return;
+    }
+    ir(actual + 1, false);
+  });
+
+  function enviarBriefing() {
+    var pesoTotal = adjuntos.material.concat(adjuntos.fotos)
+      .reduce(function (acc, f) { return acc + f.size; }, 0);
+    if (pesoTotal > MAX_ADJUNTOS_BYTES) {
+      alert('Los archivos adjuntos pesan demasiado (máx. 15 MB en total entre material y fotos). Quitad alguno, comprimidlos o enviádnoslos aparte por email a hola@webparabodas.es.');
+      return;
+    }
+
+    var fd = new FormData();
+    new FormData(form).forEach(function (v, k) {
+      if (typeof v === 'string') fd.append(k, v);
+    });
+    adjuntos.material.forEach(function (f) { fd.append('material', f, f.name); });
+    adjuntos.fotos.forEach(function (f) { fd.append('fotos', f, f.name); });
+
+    var boton = document.getElementById('btn-siguiente');
+    var textoBoton = boton.textContent;
+    boton.disabled = true;
+    boton.textContent = 'Enviando…';
+
+    fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: fd })
+      .then(function () {
+        ir(FIN, false);
+        try { localStorage.removeItem(CLAVE); } catch (e) {}
+      })
+      .catch(function () {
+        boton.disabled = false;
+        boton.textContent = textoBoton;
+        alert('No hemos podido enviar el briefing. Comprobad la conexión y volved a intentarlo, o escribidnos a hola@webparabodas.es.');
+      });
+  }
+  document.getElementById('btn-atras').addEventListener('click', function () { ir(Math.max(1, actual - 1), false); });
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-ir]');
+    if (!b) return;
+    var destino = Number(b.dataset.ir);
+    ir(destino, destino > actual);
+  });
+
+  /* ---------- archivos ---------- */
+  form.querySelectorAll('[data-subida]').forEach(function (zona) {
+    var input = zona.querySelector('input[type=file]');
+    var lista = zona.parentElement.querySelector('[data-lista]');
+    var acumulado = [];
+    adjuntos[input.name] = acumulado;
+
+    function pintar() {
+      lista.innerHTML = '';
+      acumulado.forEach(function (f, i) {
+        var kb = f.size > 1048576 ? (f.size / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(f.size / 1024)) + ' KB';
+        var fila = document.createElement('div');
+        fila.className = 'adjunto';
+        fila.innerHTML = '<svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#6F6C43" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 2H5.5A1.5 1.5 0 0 0 4 3.5v13A1.5 1.5 0 0 0 5.5 18h9a1.5 1.5 0 0 0 1.5-1.5V7z"></path><path d="M11 2v5h5"></path></svg>' +
+          '<b></b><i>' + kb + '</i>' +
+          '<button type="button" aria-label="Quitar archivo">&times;</button>';
+        fila.querySelector('b').textContent = f.name;
+        fila.querySelector('button').addEventListener('click', function () { acumulado.splice(i, 1); pintar(); });
+        lista.appendChild(fila);
+      });
+    }
+    function anadir(archivos) {
+      Array.prototype.forEach.call(archivos, function (f) {
+        if (!acumulado.some(function (x) { return x.name === f.name && x.size === f.size; })) acumulado.push(f);
+      });
+      pintar();
+    }
+    input.addEventListener('change', function () { anadir(input.files); input.value = ''; });
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      zona.addEventListener(ev, function (e) { e.preventDefault(); zona.classList.add('encima'); });
+    });
+    ['dragleave', 'drop'].forEach(function (ev) {
+      zona.addEventListener(ev, function (e) { e.preventDefault(); zona.classList.remove('encima'); });
+    });
+    zona.addEventListener('drop', function (e) { if (e.dataTransfer) anadir(e.dataTransfer.files); });
+  });
+
+  /* ---------- eventos generales ---------- */
+  form.addEventListener('input', function (e) {
+    var campo = e.target.closest('[data-campo]');
+    if (campo) marcar(campo, false);
+    guardar();
+  });
+  form.addEventListener('change', function (e) {
+    var campo = e.target.closest('[data-campo]');
+    if (campo) marcar(campo, false);
+    condiciones();
+    guardar();
+  });
+  form.addEventListener('submit', function (e) { e.preventDefault(); });
+  form.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target.tagName === 'INPUT') {
+      e.preventDefault();
+      document.getElementById('btn-siguiente').click();
+    }
+  });
+
+  recuperar();
+  ir(actual, false);
+})();
+</script>
+</body>
+</html>
