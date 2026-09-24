@@ -1122,6 +1122,18 @@ ul,ol{margin:0;padding:0;list-style:none}
     ir(actual + 1, false);
   });
 
+  function archivoABase64(file) {
+    return new Promise(function (resolve, reject) {
+      var lector = new FileReader();
+      lector.onload = function () {
+        var base64 = String(lector.result).split(',')[1] || '';
+        resolve({ nombre: file.name, tipo: file.type || 'application/octet-stream', datos: base64 });
+      };
+      lector.onerror = reject;
+      lector.readAsDataURL(file);
+    });
+  }
+
   function enviarBriefing() {
     var pesoTotal = adjuntos.material.concat(adjuntos.fotos)
       .reduce(function (acc, f) { return acc + f.size; }, 0);
@@ -1130,19 +1142,28 @@ ul,ol{margin:0;padding:0;list-style:none}
       return;
     }
 
-    var fd = new FormData();
-    new FormData(form).forEach(function (v, k) {
-      if (typeof v === 'string') fd.append(k, v);
-    });
-    adjuntos.material.forEach(function (f) { fd.append('material', f, f.name); });
-    adjuntos.fotos.forEach(function (f) { fd.append('fotos', f, f.name); });
+    var datos = {};
+    new FormData(form).forEach(function (v, k) { if (typeof v === 'string') datos[k] = v; });
 
     var boton = document.getElementById('btn-siguiente');
     var textoBoton = boton.textContent;
     boton.disabled = true;
     boton.textContent = 'Enviando…';
 
-    fetch(GOOGLE_SCRIPT_URL, { method: 'POST', mode: 'no-cors', body: fd })
+    Promise.all([
+      Promise.all(adjuntos.material.map(archivoABase64)),
+      Promise.all(adjuntos.fotos.map(archivoABase64))
+    ])
+      .then(function (resultados) {
+        datos.material = resultados[0];
+        datos.fotos = resultados[1];
+        return fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(datos)
+        });
+      })
       .then(function () {
         ir(FIN, false);
         try { localStorage.removeItem(CLAVE); } catch (e) {}
